@@ -1,31 +1,72 @@
-<!DOCTYPE html>
-<html>
+{{> content_top }}
 
-  <head>
-    <title>{{page.head.title}}</title>
-  </head>
+<body>
+  <h2>{{page.head.title}}</h2>
+  <div class="w-50 p-3">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
 
-  <body>
-    <h2>Text Transformations</h2>
-    Example: <code>{{page.head.title}}</code>
-    <ul>
-      <li><code>upper page.head.title</code>: {{upper page.head.title}}</li>
-      <li><code>lower page.head.title</code>: {{lower page.head.title}}</li>
-      <li><code>trunc 8 page.head.title</code>: {{trunc 8 page.head.title}}</li>
-      <li><code>abbrev 8 page.head.title</code>: {{abbrev 8 page.head.title}}</li>
-      <li><code>trim "   hello    "</code>: {{trim " hello "}}</li>
-      <li><code>plural 0 "apple" "apples"</code>: {{plural 0 "apple" "apples"}}</li>
-      <li><code>plural 1 "apple" "apples"</code>: {{plural 1 "apple" "apples"}}</li>
-      <li><code>plural 2 "apple" "apples"</code>: {{plural 2 "apple" "apples"}}</li>
-      <li><code>join ", " ["tag1", "tag2"]</code>: {{join ", " ["tag1", "tag2"]}}</li>
-      <li><code>split ", " "tag1, tag2"</code>: {{split ", " "tag1, tag2" }}</li>
-      <li><code>splitn " " 3 "tag1 tag2 tag3 tag4"</code>: {{splitn " " 3 "tag1 tag2 tag3 tag4" }}</li>
-      <li><code>sort_alpha ["a", "c", "b"]</code>: {{sort_alpha ["a", "c", "b"] }}</li>
-      <li><code>add 1 2</code>: {{add 1 2 }}</li>
-    </ul>
+          <th scope="col">Usage</th>
+          <th scope="col">Output</th>
 
-
-
-  </body>
+        </tr>
+      </thead>
+      <tr>
+        <td><code>upper page.head.title</code></td>
+        <td>{{upper page.head.title}}</td>
+      </tr>
+      <tr>
+        <td><code>lower page.head.title</code></td>
+        <td> {{lower page.head.title}}</td>
+      </tr>
+      <tr>
+        <td><code>trunc 8 page.head.title</code></td>
+        <td>{{trunc 8 page.head.title}}</td>
+      </tr>
+      <tr>
+        <td><code>abbrev 8 page.head.title</code></td>
+        <td>{{abbrev 8 page.head.title}}</td>
+      </tr>
+      <tr>
+        <td><code>trim "   hello    "</code></td>
+        <td>{{trim " hello "}}</td>
+      </tr>
+      <tr>
+        <td><code>plural 0 "apple" "apples"</code></td>
+        <td>{{plural 0 "apple" "apples"}}</td>
+      </tr>
+      <tr>
+        <td><code>plural 1 "apple" "apples"</code></td>
+        <td>{{plural 1 "apple" "apples"}}</td>
+      </tr>
+      <tr>
+        <td><code>plural 2 "apple" "apples"</code></td>
+        <td>{{plural 2 "apple" "apples"}}</td>
+      </tr>
+      <tr>
+        <td><code>join ", " ["tag1", "tag2"]</code></td>
+        <td>{{join ", " ["tag1", "tag2"]}}</td>
+      </tr>
+      <tr>
+        <td><code>split ", " "tag1, tag2"</code></td>
+        <td>{{split ", " "tag1, tag2" }}</td>
+      </tr>
+      <tr>
+        <td><code>splitn " " 3 "tag1 tag2 tag3 tag4"</code></td>
+        <td> {{splitn " " 3 "tag1 tag2 tag3 tag4" }}</td>
+      </tr>
+      <tr>
+        <td><code>sort_alpha ["a", "c", "b"]</code></td>
+        <td>{{sort_alpha ["a", "c", "b"] }}</td>
+      </tr>
+      <tr>
+        <td><code>add 1 2</code></td>
+        <td>{{add 1 2 }}</td>
+      </tr>
+      <tr>
+    </table>
+  </div>
+</body>
 
 </html>
