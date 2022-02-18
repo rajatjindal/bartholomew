@@ -1,3 +1,6 @@
+use flate2::write::GzEncoder;
+use flate2::Compression;
+use std::io::prelude::*;
 use std::path::PathBuf;
 
 mod content;
@@ -23,7 +26,11 @@ fn main() {
         Ok(()) => {}
         Err(e) => {
             eprintln!("Internal Server Error: {}", e);
-            let msg = if debug_mode {e.to_string()} else {DEFAULT_500_ERR.to_owned()};
+            let msg = if debug_mode {
+                e.to_string()
+            } else {
+                DEFAULT_500_ERR.to_owned()
+            };
             internal_server_error(msg)
         }
     }
@@ -31,13 +38,12 @@ fn main() {
 
 /// The main entrypoint. This is executed for each HTTP request.
 fn exec() -> anyhow::Result<()> {
-
     // Preview mode lets you see content marked unpublished.
     let preview_mode = match std::env::var("PREVIEW_MODE") {
         Ok(val) if val == "1" => {
             eprintln!("INFO: Bartholomew is running in PREVIEW_MODE");
             true
-        },
+        }
         _ => false,
     };
 
@@ -64,7 +70,6 @@ fn exec() -> anyhow::Result<()> {
     }
     eprintln!("Base URL: {:?}", &config.base_url);
 
-    
     let mut engine = template::Renderer::new(
         PathBuf::from(TEMPLATE_PATH),
         PathBuf::from(SCRIPT_PATH),
@@ -91,11 +96,15 @@ fn exec() -> anyhow::Result<()> {
 
             // Hide unpublished content unless PREVIEW_MODE is on.
             if !doc.published && !preview_mode {
-                eprintln!("WARNING: Unpublished document was requested. {}", &path_info);
-                let err_vals = template::error_values("Not Found", "The requested page was not found.");
+                eprintln!(
+                    "WARNING: Unpublished document was requested. {}",
+                    &path_info
+                );
+                let err_vals =
+                    template::error_values("Not Found", "The requested page was not found.");
                 let body = engine.render_template(err_vals, config)?;
                 not_found(path_info, body);
-                return Ok(())
+                return Ok(());
             }
 
             let status_opt = doc.head.status.clone();
@@ -107,18 +116,22 @@ fn exec() -> anyhow::Result<()> {
                     send_redirect(path_info, location, status);
                 }
                 None => {
-                    let content_type = doc.head.content_type.clone().unwrap_or_else(||DEFAULT_CONTENT_TYPE.to_owned());
+                    let content_type = doc
+                        .head
+                        .content_type
+                        .clone()
+                        .unwrap_or_else(|| DEFAULT_CONTENT_TYPE.to_owned());
 
-                    let mut data = engine.render_template(doc, config).map_err(|e| anyhow::anyhow!("Rendering {:?}: {}", &content_path, e))?;
+                    let mut data = engine
+                        .render_template(doc, config)
+                        .map_err(|e| anyhow::anyhow!("Rendering {:?}: {}", &content_path, e))?;
                     if content_type.starts_with("text/html") {
                         data = minify::html::minify(&data);
                     }
                     send_result(path_info, data, content_type, status_opt);
-
                 }
             }
 
-            
             Ok(())
         }
         Err(_) => {
@@ -151,8 +164,14 @@ fn send_result(route: String, body: String, content_type: String, status_opt: Op
     if let Some(status) = status_opt {
         println!("Status: {}", status);
     }
+    println!("Content-Encoding: {}", "gzip");
     println!("Content-Type: {}\n", content_type);
-    println!("{}", body);
+
+    let mut e = GzEncoder::new(Vec::new(), Compression::default());
+    e.write_all(b"body").unwrap();
+    println!("{:?}", e.finish().unwrap())
+
+    // println!("{}", body);
 }
 
 fn send_redirect(route: String, location: String, status: String) {
